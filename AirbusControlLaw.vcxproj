@@ -145,9 +145,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="PIDController.h" />
     <ClInclude Include="SimConnect.h" />
     <ClInclude Include="SimConnectInterface.h" />
