@@ -1,15 +1,15 @@
 /*
   Airbus aircraft are controlled by so-called "control laws" when operating
-  in standard flight. This means that under normal conditions inputs to the 
+  in standard flight. This means that under normal conditions inputs to the
   joystick do not correspond directly to deflections of the control surfaces.
 
   This project simulates:
-  * Horizontal side-stick corresponds directly to roll angle 
+  * Horizontal side-stick corresponds directly to roll angle
   * Bank angle protection mechanisms
 
   See http://www.airbusdriver.net/airbus_fltlaws.htm for overview of Airbus
   control laws.
-*/ 
+*/
 
 #include "stdafx.h"
 
@@ -56,7 +56,7 @@ void setupEvents()
 void setupDatadef() {
   ASSERT_SC_SUCCESS(SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_AIRCRAFT_ROLL, "PLANE BANK DEGREES", "Radians"));
   ASSERT_SC_SUCCESS(SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_AIRCRAFT_ROLL, "AILERON POSITION", "Position"));
-  
+
   ASSERT_SC_SUCCESS(SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_AIRCRAFT_POSITION, "PLANE BANK DEGREES", "Radians"));
   ASSERT_SC_SUCCESS(SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_AIRCRAFT_POSITION, "ROTATION VELOCITY BODY X", "Radians per second"));
 
@@ -78,9 +78,9 @@ double CalculateDesiredRollRate(double joystick_input) {
   const double& MAX_REQUESTABLE_ROLL_RATE = RAD_S_PER_UNIT_DEFLECTION;
 
   double desired_roll_rate_rad_s = RAD_S_PER_UNIT_DEFLECTION * joystick_input;
-  
+
   /*
-    Apply roll protection here: if bank angle greater than 33 degrees, and no 
+    Apply roll protection here: if bank angle greater than 33 degrees, and no
     pressure on sidestick, request roll rate until bank angle is 33 degrees or
     less. Always prevent bank angle exceeding 67 degrees.
   */
@@ -100,7 +100,7 @@ double CalculateDesiredRollRate(double joystick_input) {
   /* true if aircraft is rolling in direction of bank */
   bool isRollingBankDir = (sign(aircraft_status.bank_rad) == -sign(desired_roll_rate_rad_s));
 
-  /* maximum bank angle is 67 degrees. to enforce this, aggressively reduce 
+  /* maximum bank angle is 67 degrees. to enforce this, aggressively reduce
      requested roll rate as 67 degrees is approached.
   */
   if (abs(aircraft_status.bank_rad) >= MAX_BANK_ANGLE) {
@@ -109,7 +109,7 @@ double CalculateDesiredRollRate(double joystick_input) {
   else if (abs(aircraft_status.bank_rad) > BANK_CLAMPING_ANGLE && isRollingBankDir) {
     /* linearly reduce maximum allowable roll rate as maximum bank angle is approached */
     double max_roll_rate = MAX_REQUESTABLE_ROLL_RATE + (abs(aircraft_status.bank_rad) - BANK_CLAMPING_ANGLE) * (0 - MAX_REQUESTABLE_ROLL_RATE) / (MAX_BANK_ANGLE - BANK_CLAMPING_ANGLE);
-    
+
     /* clamp pre-computed desired_roll_rate to this value */
     if (abs(desired_roll_rate_rad_s) > max_roll_rate) {
       desired_roll_rate_rad_s = max_roll_rate * sign(desired_roll_rate_rad_s);
@@ -205,7 +205,7 @@ void CALLBACK SC_Dispatch_Handler(SIMCONNECT_RECV* pData, DWORD cbData, void *pC
 void runFBW()
 {
   // Establish connected to FSX
-  while (SimConnect_Open(&hSimConnect, "Airbus Contorl Law", NULL, 0, 0, 0) != S_OK); 
+  while (SimConnect_Open(&hSimConnect, "Airbus Contorl Law", NULL, 0, 0, 0) != S_OK);
 
   printf("Connected...\b");
 
