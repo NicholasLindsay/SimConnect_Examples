@@ -39,6 +39,19 @@ In order to build, you will require the SimConnect SDK. Copy the file `SimConnec
 
 The control algorithm is heavily commented inside the source code. Have a look at the *`CalculateDesiredRollRate`* and *`UpdateControls`* functions inside `main.cpp`.
 
+![Graph of roll rate behaviour](https://github.com/NicholasLindsay/SimConnect_Examples/blob/master/doc/AllowedRollRatesvsBank.png "Allowed Roll Rate vs Bank Angle")
+
+Brief description:
+
+The position of the joystick commands a roll rate directly proportional to the joystick's displacement. If the bank angle of the aircraft is less than 33 degrees, this roll rate is the setpoint for the PID controller. Otherwise:
+* If the bank angle is greater than 67 degrees, the FBW system commands a high rotation rate in the opposite direction to the bank angle
+* If the bank angle is between 60 and 67 degrees, the FBW system clamps the requested rotation rate if it is acting to increase the bank angle
+* If the bank angle is between 33 and 60 degrees, and the joystick is neutral in the roll axis, the FBW systems commands a rotation rate acting in the opposite direction to the bank angle
+
+See the above graph for a plot of allowed rotation rates vs bank angle.
+
+A PID controller is used to match the aircrafts actuall roll rate to the desired value. The input to the PID controller is the difference between the desired and actual rotation rate, and the output of the PID control is a number is the required deflection of the ailerons.
+
 ### Limitations
 
 This is a simple and incomplete example. The FBW roll system does not function correctly under conditions of extreme pitch, yaw or speed. The control surfaces sometimes move instantaneously instead of gradually. The program is only tuned for the default Boeing 737-800. Nonetheless it is a useful proof-of-concept.
