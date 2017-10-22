@@ -25,7 +25,7 @@ To see this example in action:
 * Start FSX
 * Choose the Default B737-800
 * Take off and achieve stable flight
-* Run roll_example.exe, provided in this reposity under `prebuilt_binaries`
+* Run roll_example.exe, provided in this repository under `prebuilt_binaries`
 * Try moving your joystick left and right. Also try letting go of the joystick and have a look at the response of the aircraft. You may notice that the aircraft seems more responsive than usual.
 * Try banking more than 33 degrees and then completely letting go of the joystick. The aircraft will reduce it's bank angle until it is 33 degrees.
 * Try to bank to greater than 67 degrees. You will notice that the roll rate decreases very quickly despite constant side-stick pressure around 60 degrees of bank - this is to prevent the aircraft from exceeding the 67 degree limit.
