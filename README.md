@@ -30,6 +30,11 @@ To see this example in action:
 * Try banking more than 33 degrees and then completely letting go of the joystick. The aircraft will reduce it's bank angle until it is 33 degrees.
 * Try to bank to greater than 67 degrees. You will notice that the roll rate decreases very quickly despite constant side-stick pressure around 60 degrees of bank - this is to prevent the aircraft from exceeding the 67 degree limit.
 
+### How to build
+
+In order to build, you will require the SimConnect SDK. Copy the file `SimConnect.lib` from the SDK into the this directory, and make sure that `SimConnect.lib` is specified in Project Properties > Linker > Command Line > Additional Options.
+
+
 ### Description of control algorithm
 
 The control algorithm is heavily commented inside the source code. Have a look at the *`CalculateDesiredRollRate`* and *`UpdateControls`* functions inside `main.cpp`.
