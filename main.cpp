@@ -106,9 +106,11 @@ double CalculateDesiredRollRate(double joystick_input) {
   if (abs(aircraft_status.bank_rad) >= MAX_BANK_ANGLE) {
     desired_roll_rate_rad_s = RESTORING_ROLL_RATE * sign(aircraft_status.bank_rad);
   }
-  else if (abs(aircraft_status.bank_rad) > BANK_CLAMPING_ANGLE && isRollingBankDir) {
+  else if (abs(aircraft_status.bank_rad) > BANK_CLAMPING_ANGLE && isRollingBankDir && joystick_input != 0) {
     /* linearly reduce maximum allowable roll rate as maximum bank angle is approached */
-    double max_roll_rate = MAX_REQUESTABLE_ROLL_RATE + (abs(aircraft_status.bank_rad) - BANK_CLAMPING_ANGLE) * (0 - MAX_REQUESTABLE_ROLL_RATE) / (MAX_BANK_ANGLE - BANK_CLAMPING_ANGLE);
+    double max_roll_rate = MAX_REQUESTABLE_ROLL_RATE + 
+      (abs(aircraft_status.bank_rad) - BANK_CLAMPING_ANGLE) * 
+        (0 - MAX_REQUESTABLE_ROLL_RATE) / (MAX_BANK_ANGLE - BANK_CLAMPING_ANGLE);
 
     /* clamp pre-computed desired_roll_rate to this value */
     if (abs(desired_roll_rate_rad_s) > max_roll_rate) {
