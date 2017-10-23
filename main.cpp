@@ -65,7 +65,10 @@ void setupDatadef() {
 
 void setupInitialDataRequests() {
   /* Get position information for every sim frame */
-  ASSERT_SC_SUCCESS(SimConnect_RequestDataOnSimObject(hSimConnect, REQUEST_AIRCRAFT_POSITION, DEFINITION_AIRCRAFT_POSITION, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SIM_FRAME, 0));
+  ASSERT_SC_SUCCESS(
+    SimConnect_RequestDataOnSimObject(hSimConnect, REQUEST_AIRCRAFT_POSITION,
+      DEFINITION_AIRCRAFT_POSITION, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SIM_FRAME, 0)
+  );
 }
 
 /*
@@ -132,7 +135,8 @@ void UpdateControls() {
   /* Use a P-only controller for roll rate */
   const double AILERON_DEFL_PER_RAD_S_ERROR = 10;
   static PIDController roll_rate_controller(AILERON_DEFL_PER_RAD_S_ERROR, 0, 0);
-  auto output = roll_rate_controller.Update(desired_roll_rate - aircraft_status.rotation_vel_x_rad_s, SIM_UPDATE_RATE);
+  auto output = roll_rate_controller.Update(
+    desired_roll_rate - aircraft_status.rotation_vel_x_rad_s, SIM_UPDATE_RATE);
 
   /* Manually clamp controller output */
   if (output > 1) {
@@ -145,7 +149,9 @@ void UpdateControls() {
   /* Send output to FSX */
   structAircraftRollControl rollControlSettings;
   rollControlSettings.aileronDeflect = output;
-  ASSERT_SC_SUCCESS(SimConnect_SetDataOnSimObject(hSimConnect, DEFINITION_AIRCRAFT_ROLL_CONTROL, SIMCONNECT_OBJECT_ID_USER, 0, 1, sizeof(rollControlSettings), &rollControlSettings));
+  ASSERT_SC_SUCCESS(
+    SimConnect_SetDataOnSimObject(hSimConnect, DEFINITION_AIRCRAFT_ROLL_CONTROL, 
+      SIMCONNECT_OBJECT_ID_USER, 0, 1, sizeof(rollControlSettings), &rollControlSettings));
 }
 
 void CALLBACK SC_Dispatch_Handler(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext)
@@ -159,8 +165,9 @@ void CALLBACK SC_Dispatch_Handler(SIMCONNECT_RECV* pData, DWORD cbData, void *pC
     // Position data:
     if (pObjData->dwRequestID == REQUEST_AIRCRAFT_POSITION) {
       // update aircraft status struct
-      aircraft_status = *reinterpret_cast<structAircraftPosition*>(&pObjData->dwData);
-      // control
+      aircraft_status = 
+        *reinterpret_cast<structAircraftPosition*>(&pObjData->dwData);
+      
       UpdateControls();
     }
 
@@ -223,7 +230,6 @@ void runFBW()
   // Main loop
   while (0 == quit) {
     SimConnect_CallDispatch(hSimConnect, SC_Dispatch_Handler, NULL);
-    Sleep(1);
   }
 
   SimConnect_Close(hSimConnect);

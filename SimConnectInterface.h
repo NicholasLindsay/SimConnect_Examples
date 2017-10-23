@@ -5,8 +5,10 @@
    exchange data with FS through the SimConnect interface.
 */
 
-/* FSX Simulation phyiscs frames rate per second */
-const double SIM_UPDATE_RATE = 60;
+/* FSX Simulation phyiscs frames rate per second: this is actually variable
+   but we don't currently make use of it.
+*/
+const double SIM_UPDATE_RATE = 0;
 
 /* Input Group IDs */
 enum GROUP_ID {
