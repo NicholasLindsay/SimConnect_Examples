@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{EEC0E0E2-6BA2-44A8-AB79-1287B1C6A774}</ProjectGuid>
+    <ProjectGuid>{CD13B049-8F66-4C14-90E3-4B6CB9CC68B9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>AirbusControlLaw</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
@@ -90,6 +90,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,11 +146,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="PIDController.h" />
     <ClInclude Include="SimConnect.h" />
     <ClInclude Include="SimConnectInterface.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

@@ -11,17 +11,17 @@
   control laws.
 */
 
-#include "stdafx.h"
-
 #include <windows.h> 
 #include <tchar.h> 
 #include <stdio.h> 
 #include <strsafe.h> 
 
-#include "SimConnect.h" 
-#include "PIDController.h"
+#include "external/SimConnect.h" 
+
+#include "common/PIDController.h"
+#include "common/util.h"
+
 #include "SimConnectInterface.h"
-#include "util.h"
 
 int     quit = 0;
 HANDLE  hSimConnect = NULL;
@@ -54,9 +54,6 @@ void setupEvents()
 }
 
 void setupDatadef() {
-  ASSERT_SC_SUCCESS(SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_AIRCRAFT_ROLL, "PLANE BANK DEGREES", "Radians"));
-  ASSERT_SC_SUCCESS(SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_AIRCRAFT_ROLL, "AILERON POSITION", "Position"));
-
   ASSERT_SC_SUCCESS(SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_AIRCRAFT_POSITION, "PLANE BANK DEGREES", "Radians"));
   ASSERT_SC_SUCCESS(SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_AIRCRAFT_POSITION, "ROTATION VELOCITY BODY X", "Radians per second"));
 
@@ -214,7 +211,7 @@ void CALLBACK SC_Dispatch_Handler(SIMCONNECT_RECV* pData, DWORD cbData, void *pC
 void runFBW()
 {
   // Establish connected to FSX
-  while (SimConnect_Open(&hSimConnect, "Airbus Contorl Law", NULL, 0, 0, 0) != S_OK);
+  while (SimConnect_Open(&hSimConnect, "Airbus Roll Control Law", NULL, 0, 0, 0) != S_OK);
 
   printf("Connected...\b");
 
