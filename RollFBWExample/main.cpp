@@ -143,6 +143,12 @@ void UpdateControls() {
     output = -1;
   }
 
+  /* Uncomment these lines to add a first order response to the ailerons. The
+     selected time constant of 0.1s is typical for flight control surfaces. 
+  */
+  // static FirstOrderResponseBlock aileronResponse(0.1, 1);
+  // output = aileronResponse.Update(output, 0.025);
+
   /* Send output to FSX */
   structAircraftRollControl rollControlSettings;
   rollControlSettings.aileronDeflect = output;
@@ -179,8 +185,6 @@ void CALLBACK SC_Dispatch_Handler(SIMCONNECT_RECV* pData, DWORD cbData, void *pC
 
     case EVENT_SIM_START:
     {
-      // Now sim has started, enable events
-      setupEvents();
     }
     break;
     case EVENT_XAXIS:

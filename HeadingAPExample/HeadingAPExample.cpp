@@ -30,30 +30,6 @@ structAircraftPosition aircraft_status;
 /* Selected autopilot heading */
 structAutopilotSelectedHeading ap_selected_heading;
 
-// temp: find sim rate
-#include <chrono>
-typedef std::chrono::high_resolution_clock Clock;
-decltype(Clock::now()) last_time(Clock::now());
-int frame_count = 0;
-
-void setupEvents()
-{
-  // Set up private events
-  ASSERT_SC_SUCCESS(SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_XAXIS));
-
-  // Add private events to notification group (don't mask for now)
-  ASSERT_SC_SUCCESS(SimConnect_AddClientEventToNotificationGroup(hSimConnect, GROUP_0, EVENT_XAXIS));
-
-  // Set highest priority so we recieve event before ESP
-  ASSERT_SC_SUCCESS(SimConnect_SetNotificationGroupPriority(hSimConnect, GROUP_0, SIMCONNECT_GROUP_PRIORITY_HIGHEST));
-
-  // Map joystick event to this
-  ASSERT_SC_SUCCESS(SimConnect_MapInputEventToClientEvent(hSimConnect, INPUT_XAXIS, "joystick:0:XAxis", EVENT_XAXIS));
-
-  // Turn joystick events on
-  ASSERT_SC_SUCCESS(SimConnect_SetInputGroupState(hSimConnect, INPUT_XAXIS, SIMCONNECT_STATE_ON));
-}
-
 void setupDatadef() {
   ASSERT_SC_SUCCESS(SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_AIRCRAFT_POSITION, "PLANE BANK DEGREES", "Radians"));
   ASSERT_SC_SUCCESS(SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_AIRCRAFT_POSITION, "PLANE HEADING DEGREES TRUE", "Radians"));
@@ -99,7 +75,7 @@ void UpdateControls() {
   /* Update PID controller */
   double requested_bank = headingController.Update(heading_error, 1);
 
-  /* Dump to screen */
+  /* Dump to screen: uncomment this to see desired roll calculations */
   printf("HEADING: Req: %lf , Act: %lf , Err = %lf, Bank = %lf\n", 
     ap_selected_heading.heading, degrees(aircraft_status.heading), 
     heading_error, degrees(requested_bank));
@@ -126,7 +102,7 @@ void UpdateControls() {
     SimConnect_SetDataOnSimObject(hSimConnect, DEFINITION_AIRCRAFT_ROLL_CONTROL,
       SIMCONNECT_OBJECT_ID_USER, 0, 1, sizeof(rollControlSettings), &rollControlSettings));
 
-  /* Dump to screen */
+  /* Dump to screen: uncomment this to see aileron control calculations */
   //printf("BANK: Req: %lf , Act: %lf , Err = %lf, Bank = %lf\n",
   //  requested_bank, aircraft_status.bank_rad, bank_error, aileron_defl);
 }
@@ -144,15 +120,6 @@ void CALLBACK SC_Dispatch_Handler(SIMCONNECT_RECV* pData, DWORD cbData, void *pC
       // update aircraft status struct
       aircraft_status =
         *reinterpret_cast<structAircraftPosition*>(&pObjData->dwData);
-
-      auto t = Clock::now();
-      frame_count++;
-      if (std::chrono::duration_cast<std::chrono::milliseconds>(t - last_time).count()
-           > 1000) {
-        printf("FR = %d\n", frame_count);
-        frame_count = 0;
-        last_time = t;
-      }
 
       UpdateControls();
     }
@@ -175,8 +142,6 @@ void CALLBACK SC_Dispatch_Handler(SIMCONNECT_RECV* pData, DWORD cbData, void *pC
 
     case EVENT_SIM_START:
     {
-      // Now sim has started, enable events
-      setupEvents();
     }
     break;
     case EVENT_XAXIS:
@@ -210,9 +175,6 @@ void runHeadingControl()
   while (SimConnect_Open(&hSimConnect, "Heading Autopilot", NULL, 0, 0, 0) != S_OK);
 
   printf("Connected...\b");
-
-  // Setup events
-  // setupEvents();
 
   // Setup data definitons
   setupDatadef();
