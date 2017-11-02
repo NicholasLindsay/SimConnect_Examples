@@ -1,14 +1,14 @@
-#ifndef SIMCONNECTSTRUCT_H
-#define SIMCONNECTSTRUCT_H
+#ifndef SIMCONNECTINTERFACE_H
+#define SIMCONNECTINTERFACE_H
 
-/* This file contains all required enums, constants and structures required to 
-   exchange data with FS through the SimConnect interface.
+/* This file contains all required enums, constants and structures required to
+exchange data with FS through the SimConnect interface.
 */
 
 /* FSX Simulation phyiscs frames rate per second: this is actually variable
-   but we don't currently make use of it.
+but we don't currently make use of it.
 */
-const double SIM_UPDATE_RATE = 0;
+const double SIM_UPDATE_RATE = 30;
 
 /* Input Group IDs */
 enum GROUP_ID {
@@ -26,12 +26,13 @@ enum EVENT_ID {
 
 enum REQUEST_ID {
   REQUEST_AIRCRAFT_POSITION,
+  REQUEST_AUTOPILOT_HEADING,
 };
 
 /* Structure Definition ID's */
 enum DATA_DEFINE_ID {
-  DEFINITION_AIRCRAFT_ROLL,
   DEFINITION_AIRCRAFT_POSITION,
+  DEFINITION_AUTOPILOT_SELECTED_HEADING,
   DEFINITION_AIRCRAFT_ROLL_CONTROL,
 };
 
@@ -40,7 +41,12 @@ enum DATA_DEFINE_ID {
 /* Struct used to get position from simulator */
 struct structAircraftPosition {
   double bank_rad; // bank angle in radians
-  double rotation_vel_x_rad_s; // roll rate in radians/second
+  double heading; // true aircraft heading in radians
+};
+
+/* Struct used to get the heading from the autopilot panel */
+struct structAutopilotSelectedHeading {
+  double heading; // set heading in degrees
 };
 
 /* Struct used to send controls to the simulator */

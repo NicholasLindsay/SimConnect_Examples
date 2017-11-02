@@ -2,7 +2,7 @@
 
 This repository contains different examples of using the SimConnect API to control Microsoft Flight Simulator X (FSX) externally.
 
-Currently, there is only one example:
+Currently, there are two examples:
 
 ## Fly-By-Wire Roll
 
@@ -55,3 +55,12 @@ A PID controller is used to match the aircrafts actuall roll rate to the desired
 ### Limitations
 
 This is a simple and incomplete example. The FBW roll system does not function correctly under conditions of extreme pitch, yaw or speed. The control surfaces sometimes move instantaneously instead of gradually. The program is only tuned for the default Boeing 737-800. Nonetheless it is a useful proof-of-concept.
+
+## Lateral autopilot
+
+This is an example of a simple nested PID control algorithm for the aircraft's heading.
+
+See code for documentation.
+
+*TODO: Improve documentation here *
+
