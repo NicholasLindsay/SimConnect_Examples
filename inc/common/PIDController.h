@@ -1,12 +1,18 @@
 #ifndef PIDCONTROLLER_H
 #define PIDCONTROLLER_H
 
+#include "common\siso_blocks.h"
+
+/* 
+  Provides a simple and output clamped PID controller for use in simulations.
+*/
+
 /* Generic PID controller */
-class PIDController
+class PIDController : public SISOBlock
 {
 public:
   PIDController(double p_coeff, double d_coeff, double i_coeff)
-    : p_coeff(p_coeff), d_coeff(d_coeff), i_coeff(i_coeff), last_error(0), error_integral(0), last_output(0) {}
+    : p_coeff(p_coeff), d_coeff(d_coeff), i_coeff(i_coeff), last_error(0), error_integral(0) {}
 
   void SetPCoefficient(double val) {
     p_coeff = val;
@@ -27,26 +33,10 @@ public:
   double GetICoefficient() const {
     return i_coeff;
   }
-  
-  /* 
-     Updates the PID controller with a new error and timestep and recalculates
-     the output accordingling.
-  */
-  double Update(double new_error, double timestep) {
-    last_output = InternalUpdate(new_error, timestep);
-    return last_output;
-  }
-
-  /*
-    Returns the current output calculated after the last update;
-  */
-  double Output() const {
-    return last_output;
-  }
 
 protected:
   /* Internal PID calculation */
-  virtual double InternalUpdate(double new_error, double timestep) {
+  virtual double InternalUpdate(double new_error, double timestep) override {
     error_integral += new_error * timestep;
     double error_diff = (new_error - last_error) / timestep;
 
@@ -64,7 +54,6 @@ private:
 
   double last_error;
   double error_integral;
-  double last_output;
 };
 
 /* PID controller, with clamping */

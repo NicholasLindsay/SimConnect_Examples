@@ -52,9 +52,11 @@ See the above graph for a plot of allowed rotation rates vs bank angle.
 
 A PID controller is used to match the aircrafts actuall roll rate to the desired value. The input to the PID controller is the difference between the desired and actual rotation rate, and the output of the PID control is a number is the required deflection of the ailerons.
 
+By default, the dynamics of the aileron servos are not simulated and therefor the required deflection is immedietely reflected in the output. In reality, the aileron servos have a first order response with a typical time constant of 0.1s. Uncomment the indicated lines in the code to enable the simulation of this response.
+
 ### Limitations
 
-This is a simple and incomplete example. The FBW roll system does not function correctly under conditions of extreme pitch, yaw or speed. The control surfaces sometimes move instantaneously instead of gradually. The program is only tuned for the default Boeing 737-800. Nonetheless it is a useful proof-of-concept.
+This is a simple and incomplete example. The FBW roll system does not function correctly under conditions of extreme pitch, yaw or speed. The control surfaces sometimes move instantaneously instead of gradually (this can be solved by enabling the aileron response in the code). The program is only tuned for the default Boeing 737-800. Nonetheless it is a useful proof-of-concept.
 
 ## Lateral autopilot
 
